@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="description" content="MyHealthTimeline — AI-powered Medicare health history platform."/>
+<title>MyHealthTimeline | AI-Powered Medicare Health Platform</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1E40AF;--blue-mid:#2563EB;--blue-light:#DBEAFE;--blue-pale:#EFF6FF;
+  --teal:#0D9488;--teal-light:#CCFBF1;
+  --green:#059669;--green-light:#D1FAE5;--green-dark:#047857;
+  --red:#DC2626;--red-light:#FEE2E2;--red-dark:#B91C1C;
+  --amber:#B45309;--amber-light:#FEF3C7;--amber-mid:#D97706;
+  --cyan:#0891B2;--cyan-light:#CFFAFE;
+  --slate:#334155;--slate-light:#F8FAFC;
+  --gray50:#F8FAFC;--gray100:#F1F5F9;--gray200:#E2E8F0;
+  --gray300:#CBD5E1;--gray400:#94A3B8;--gray500:#64748B;
+  --gray600:#475569;--gray700:#334155;--gray800:#1E293B;--gray900:#0F172A;
+  --bg:#F4F7FB;--white:#FFFFFF;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--gray800);-webkit-font-smoothing:antialiased;min-height:100vh}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+
+/* ══ LANDING ══════════════════════════════════════════════ */
+.landing-why{
+  background:var(--gray900);
+  padding:72px 24px 64px;
+  text-align:center;
+}
+.lw-eyebrow{
+  display:inline-block;
+  font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--blue-mid);border:1px solid rgba(37,99,235,.35);
+  background:rgba(37,99,235,.1);
+  padding:5px 14px;border-radius:20px;margin-bottom:28px;
+}
+.lw-headline{
+  font-size:clamp(26px,6vw,44px);font-weight:800;
+  color:white;letter-spacing:-.8px;line-height:1.15;
+  max-width:600px;margin:0 auto 16px;
+}
+.lw-headline em{font-style:normal;color:#60A5FA}
+.lw-body{
+  font-size:clamp(14px,2.5vw,17px);color:rgba(255,255,255,.55);
+  max-width:520px;margin:0 auto 48px;line-height:1.75;font-weight:400;
+}
+.lw-body strong{color:rgba(255,255,255,.85);font-weight:600}
+
+.sh-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:12px;max-width:540px;margin:0 auto 52px;text-align:left;
+}
+.sh-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:16px;padding:20px 18px;
+  transition:background .2s;
+}
+.sh-card:hover{background:rgba(255,255,255,.07)}
+.sh-icon{font-size:24px;margin-bottom:10px}
+.sh-title{font-size:13px;font-weight:700;color:white;margin-bottom:6px}
+.sh-desc{font-size:11px;color:rgba(255,255,255,.45);line-height:1.6}
+
+.lw-cta{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--blue-mid);color:white;
+  font-size:14px;font-weight:700;padding:14px 30px;
+  border-radius:12px;text-decoration:none;
+  box-shadow:0 4px 20px rgba(37,99,235,.4);
+  transition:all .2s;letter-spacing:-.1px;
+}
+.lw-cta:hover{background:var(--blue);box-shadow:0 6px 28px rgba(37,99,235,.55);transform:translateY(-1px)}
+
+/* ── HERO BANNER ── */
+.hero-banner{
+  background:var(--gray900);
+  border-top:1px solid rgba(255,255,255,.06);
+  padding:60px 24px 52px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.hb-orb{
+  position:absolute;border-radius:50%;pointer-events:none;
+}
+.hb-orb1{width:380px;height:380px;top:-120px;right:-100px;background:radial-gradient(circle,rgba(37,99,235,.12),transparent 65%)}
+.hb-orb2{width:280px;height:280px;bottom:-80px;left:-60px;background:radial-gradient(circle,rgba(9,148,136,.09),transparent 65%)}
+
+.hb-inner{position:relative;z-index:1}
+.hb-logo{display:inline-flex;align-items:center;gap:14px;margin-bottom:24px}
+.hb-logo-icon{
+  width:56px;height:56px;border-radius:16px;
+  background:linear-gradient(145deg,var(--blue-mid),var(--blue));
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  box-shadow:0 8px 24px rgba(37,99,235,.4);
+}
+.hb-logo-name{
+  font-size:clamp(26px,7vw,40px);font-weight:800;
+  color:white;letter-spacing:-1px;line-height:1;
+}
+.hb-logo-name span{color:#60A5FA}
+.hb-tagline{
+  font-size:clamp(13px,2.5vw,16px);color:rgba(255,255,255,.5);
+  max-width:460px;margin:0 auto 36px;line-height:1.65;
+}
+.hb-tagline strong{color:rgba(255,255,255,.8);font-weight:600}
+
+.hb-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:36px}
+.hb-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:20px;
+  font-size:11px;font-weight:600;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.6);
+}
+
+.hb-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:white;color:var(--gray900);
+  font-size:14px;font-weight:700;padding:13px 28px;
+  border-radius:12px;text-decoration:none;
+  box-shadow:0 4px 16px rgba(0,0,0,.25);
+  transition:all .2s;letter-spacing:-.1px;
+}
+.hb-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,0,0,.35)}
+
+/* ── FEATURES ROW ── */
+.feat-row{
+  background:var(--gray800);
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex;overflow-x:auto;
+  padding:0;scrollbar-width:none;
+}
+.feat-row::-webkit-scrollbar{display:none}
+.feat-item{
+  flex:0 0 auto;
+  display:flex;align-items:center;gap:8px;
+  padding:14px 20px;
+  border-right:1px solid rgba(255,255,255,.06);
+  white-space:nowrap;
+}
+.feat-item-icon{font-size:15px}
+.feat-item-txt{font-size:11px;font-weight:600;color:rgba(255,255,255,.55)}
+
+/* ── PROTOTYPE LABEL ── */
+.proto-label{
+  background:var(--gray100);
+  border-bottom:1px solid var(--gray200);
+  padding:14px 24px;
+  text-align:center;
+}
+.proto-label-txt{font-size:11px;font-weight:700;color:var(--gray500);letter-spacing:.06em;text-transform:uppercase}
+.proto-label-sub{font-size:12px;color:var(--gray400);margin-top:3px}
+
+/* ══ APP SHELL ═════════════════════════════════════════════ */
+.app-wrap{max-width:430px;margin:0 auto}
+.device{background:var(--white);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.12)}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:80;
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--gray200);
+  padding:10px 16px 0;
+}
+.topbar-r1{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.logo-wrap{display:flex;align-items:center;gap:8px}
+.logo-icon{
+  width:30px;height:30px;border-radius:8px;
+  background:linear-gradient(135deg,var(--blue-mid),var(--blue));
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  box-shadow:0 2px 8px rgba(37,99,235,.3);
+}
+.logo-name{font-size:14px;font-weight:800;color:var(--gray900);letter-spacing:-.3px}
+.logo-name span{color:var(--blue-mid)}
+.hbtns{display:flex;gap:7px;align-items:center}
+.ibtn{
+  width:30px;height:30px;border-radius:8px;
+  background:var(--gray100);border:1px solid var(--gray200);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;cursor:pointer;color:var(--gray600);
+  transition:all .15s;position:relative;
+}
+.ibtn:active{transform:scale(.92)}
+.ndot{
+  position:absolute;top:4px;right:4px;
+  width:6px;height:6px;background:var(--red);
+  border-radius:50%;border:1.5px solid white;
+  animation:pulse 2s infinite;
+}
+.uav{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--blue-mid));
+  border:2px solid white;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:white;cursor:pointer;
+  box-shadow:0 2px 8px rgba(37,99,235,.3);
+}
+
+/* ── PAGE ── */
+.page{padding:14px 14px 100px;animation:fadeUp .3s ease}
+
+/* ── HERO CARD ── */
+.hcard{
+  background:linear-gradient(150deg,#1E3A6E 0%,#1E40AF 60%,#1d4dc4 100%);
+  border-radius:18px;padding:16px;margin-bottom:12px;
+  color:white;position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(30,64,175,.35);
+}
+.hcard::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.05)}
+.hcard::after{content:'';position:absolute;bottom:-24px;left:12px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.03)}
+.hc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;position:relative;z-index:1}
+.hc-av{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;border:1.5px solid rgba(255,255,255,.25);letter-spacing:-1px}
+.hc-name{font-size:15px;font-weight:700;letter-spacing:-.3px}
+.hc-sub{font-size:10px;opacity:.65;margin-top:2px}
+.hc-risk{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:7px 11px;text-align:center}
+.hc-risk-val{font-size:20px;font-weight:800}
+.hc-risk-lbl{font-size:8px;opacity:.7;text-transform:uppercase;letter-spacing:.06em}
+.hc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;position:relative;z-index:1}
+.hstat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 5px;text-align:center}
+.hstat-val{font-size:15px;font-weight:800;line-height:1}
+.hstat-lbl{font-size:8px;opacity:.65;margin-top:2px;text-transform:uppercase;letter-spacing:.03em}
+.hc-id{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.1);border-radius:20px;padding:3px 9px;font-size:9px;font-weight:600;margin-top:8px;position:relative;z-index:1;border:1px solid rgba(255,255,255,.15)}
+
+/* ── ALERT ── */
+.alert-strip{
+  background:#FFFBEB;border:1.5px solid #FCD34D;
+  border-radius:14px;padding:11px 13px;
+  margin-bottom:12px;display:flex;gap:9px;
+}
+.alert-em{font-size:18px;flex-shrink:0;margin-top:1px}
+.alert-title{font-size:11px;font-weight:700;color:#92400E;margin-bottom:5px}
+.apills{display:flex;flex-wrap:wrap;gap:5px}
+.apill{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;display:flex;align-items:center;gap:3px}
+.apill.crit{background:#FEE2E2;color:var(--red-dark)}
+.apill.up{background:#FEF3C7;color:var(--amber-mid)}
+
+/* ── AI CARD ── */
+.ai-card{
+  background:#F0F9FF;border:1.5px solid #BAE6FD;
+  border-radius:16px;padding:13px;margin-bottom:12px;
+}
+.ai-hdr{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.ai-icon{
+  width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(135deg,var(--blue-mid),var(--blue));
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.ai-title{font-size:12px;font-weight:700;color:var(--blue)}
+.ai-sub{font-size:10px;color:#0EA5E9;margin-top:1px}
+.ai-sug{
+  background:white;border:1px solid #E0F2FE;border-radius:10px;
+  padding:8px 10px;font-size:11px;color:var(--gray600);
+  line-height:1.5;display:flex;align-items:flex-start;gap:7px;margin-bottom:5px;
+}
+.ai-sug:last-child{margin-bottom:0}
+.ai-sug-i{font-size:12px;flex-shrink:0;margin-top:1px}
+
+/* ── INSIGHT SCROLL ── */
+.iscroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+.iscroll::-webkit-scrollbar{display:none}
+.icard{min-width:140px;background:white;border:1.5px solid var(--gray200);border-radius:14px;padding:11px;flex-shrink:0}
+.icard-icon{font-size:18px;margin-bottom:5px}
+.icard-title{font-size:9px;font-weight:700;color:var(--gray500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.icard-val{font-size:16px;font-weight:800;letter-spacing:-.4px;color:var(--gray900)}
+.icard-sub{font-size:9px;color:var(--gray400);margin-top:2px;line-height:1.4}
+.icard-badge{display:inline-block;font-size:8px;font-weight:700;padding:2px 7px;border-radius:8px;margin-top:5px;letter-spacing:.03em}
+
+/* ── FILTERS ── */
+.fscroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;scrollbar-width:none}
+.fscroll::-webkit-scrollbar{display:none}
+.fchip{
+  display:flex;align-items:center;gap:4px;
+  padding:5px 11px;border-radius:20px;
+  font-size:10px;font-weight:700;cursor:pointer;
+  border:1.5px solid var(--gray200);background:white;color:var(--gray500);
+  white-space:nowrap;flex-shrink:0;transition:all .15s;
+  -webkit-tap-highlight-color:transparent;user-select:none;
+}
+.fchip.on{border-color:transparent;color:white}
+.fcnt{font-size:8px;font-weight:800;background:rgba(255,255,255,.25);padding:1px 5px;border-radius:8px}
+
+/* ── COND PILLS ── */
+.cond-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.cpill{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 11px;border-radius:20px;
+  font-size:10px;font-weight:700;cursor:pointer;
+  border:1.5px solid var(--gray200);background:white;color:var(--gray500);
+  transition:all .15s;user-select:none;
+}
+.cpill.on{border-color:transparent}
+.cdot{width:6px;height:6px;border-radius:50%}
+
+/* ── YEAR HDR ── */
+.yhdr{display:flex;align-items:center;gap:7px;margin-bottom:6px;margin-top:6px}
+.ybadge{font-size:10px;font-weight:800;color:var(--gray500);background:var(--gray100);padding:2px 9px;border-radius:20px}
+.yline{flex:1;height:1px;background:var(--gray200)}
+.ycount{font-size:9px;color:var(--gray400);font-weight:600;white-space:nowrap}
+
+/* ── EVENT CARD ── */
+.ecard{
+  background:white;border:1.5px solid var(--gray200);
+  border-radius:14px;margin-bottom:7px;overflow:hidden;
+  transition:all .2s;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.ecard.open{border-color:transparent}
+.etop{display:flex;align-items:center;gap:10px;padding:11px 12px}
+.eicon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.emain{flex:1;min-width:0}
+.etitle{font-size:12px;font-weight:700;color:var(--gray800);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.esub{display:flex;align-items:center;gap:5px;margin-top:2px}
+.etbadge{font-size:8px;font-weight:800;padding:2px 6px;border-radius:5px;letter-spacing:.02em}
+.edate{font-size:9px;color:var(--gray400)}
+.egapdot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1.5s infinite;flex-shrink:0}
+.echev{font-size:11px;color:var(--gray400);transition:transform .2s;flex-shrink:0}
+.echev.open{transform:rotate(180deg)}
+.edetail{padding:0 12px 12px;border-top:1px solid var(--gray100);animation:fadeUp .2s ease}
+.edetail-txt{font-size:11px;line-height:1.65;color:var(--gray500);padding-top:10px;margin-bottom:9px}
+.ecost-row{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:8px}
+.ecost-card{background:var(--gray50);border-radius:8px;padding:7px;text-align:center;border:1px solid var(--gray100)}
+.ecost-val{font-size:11px;font-weight:800;color:var(--gray800)}
+.ecost-lbl{font-size:8px;color:var(--gray400);font-weight:600;margin-top:1px}
+.emeta{display:flex;flex-direction:column;gap:4px;margin-bottom:7px}
+.emeta-row{display:flex;gap:6px;align-items:center;font-size:10px;color:var(--gray400)}
+.etags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.etag{font-size:8px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
+.ehedis{font-size:8px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--blue-light);color:var(--blue)}
+.egap-warn{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:7px 9px;font-size:10px;color:var(--red-dark);font-weight:600;display:flex;align-items:center;gap:5px;margin-top:5px}
+
+/* ── SUMMARY TAB ── */
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.vcard{background:white;border:1.5px solid var(--gray200);border-radius:14px;padding:12px}
+.vlbl{font-size:9px;font-weight:700;color:var(--gray400);margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em}
+.vval{font-size:18px;font-weight:800;color:var(--gray900);letter-spacing:-.5px}
+.vunit{font-size:10px;font-weight:500;color:var(--gray400)}
+.vtrend{display:inline-flex;align-items:center;font-size:9px;font-weight:700;margin-top:4px;padding:2px 7px;border-radius:8px}
+.vtrend.g{background:var(--green-light);color:var(--green-dark)}
+.vtrend.w{background:#FEF3C7;color:var(--amber)}
+.vtarget{font-size:8px;color:var(--gray400);margin-top:2px;font-weight:600}
+.sparkbar{display:flex;align-items:flex-end;gap:2px;height:22px;margin-top:7px}
+.sbar{flex:1;border-radius:2px 2px 0 0;min-height:3px}
+
+.med-row{background:white;border:1.5px solid var(--gray200);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.med-name{font-size:11px;font-weight:700;color:var(--gray800)}
+.med-detail{font-size:9px;color:var(--gray400);margin-top:1px}
+.med-adh-pct{font-size:13px;font-weight:800;color:var(--green)}
+.med-adh-lbl{font-size:8px;color:var(--gray400);font-weight:600}
+.med-adh-bar{width:42px;height:3px;background:var(--gray100);border-radius:4px;overflow:hidden;margin-top:3px;margin-left:auto}
+.med-adh-fill{height:100%;border-radius:4px}
+
+.hedis-card{background:white;border:1.5px solid var(--gray200);border-radius:14px;padding:13px;margin-bottom:8px}
+.hedis-name{font-size:11px;font-weight:700;color:var(--gray800)}
+.hedis-status{font-size:9px;font-weight:600;margin-top:1px}
+.hedis-pct{font-size:14px;font-weight:800;min-width:36px;text-align:right}
+.hedis-bar-bg{height:4px;background:var(--gray100);border-radius:10px;overflow:hidden;margin-bottom:2px}
+.hedis-bar-fill{height:100%;border-radius:10px}
+
+.care-card{background:white;border:1.5px solid var(--gray200);border-radius:12px;padding:11px 12px;margin-bottom:7px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.care-av{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.care-name{font-size:12px;font-weight:700;color:var(--gray800)}
+.care-spec{font-size:10px;color:var(--gray400);margin-top:1px}
+.care-last{font-size:9px;color:var(--gray400);margin-top:3px}
+.care-msg{background:var(--blue-pale);border-radius:8px;padding:4px 9px;font-size:9px;font-weight:700;color:var(--blue-mid);border:none;cursor:pointer;margin-left:auto;flex-shrink:0;font-family:var(--font)}
+
+/* ── GAPS ── */
+.cost-hero{background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:16px;padding:16px;margin-bottom:10px;color:white}
+.cost-hero-val{font-size:26px;font-weight:800;letter-spacing:-.8px}
+.cost-hero-lbl{font-size:9px;opacity:.5;margin-top:1px}
+.chg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+.chg-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:9px 7px;text-align:center}
+.chg-val{font-size:15px;font-weight:800;color:white}
+.chg-lbl{font-size:8px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+
+.gap-card{background:white;border:1.5px solid var(--gray200);border-radius:14px;padding:12px;margin-bottom:7px}
+.gap-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.gap-icon-wrap{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.gap-title{font-size:12px;font-weight:800;color:var(--gray800)}
+.gap-meta{font-size:9px;color:var(--gray400);margin-top:1px}
+.gap-impact{background:var(--red-light);border-radius:8px;padding:6px 9px;font-size:10px;color:var(--red-dark);font-weight:600;margin-bottom:6px}
+.gap-hedis{display:inline-block;font-size:8px;font-weight:800;padding:2px 8px;border-radius:8px;background:var(--blue-light);color:var(--blue);margin-bottom:6px}
+.gap-savings{font-size:10px;font-weight:700;color:var(--green-dark);background:var(--green-light);padding:5px 9px;border-radius:8px;display:flex;align-items:center;gap:5px;margin-bottom:7px}
+.gap-btns{display:flex;gap:6px}
+.gbtn{flex:1;padding:8px;border-radius:9px;border:none;font-family:var(--font);font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .15s}
+.gbtn.p{background:var(--blue-mid);color:white}
+.gbtn.s{background:var(--gray100);color:var(--gray600)}
+
+/* ── COST ── */
+.cost-bar-section{background:white;border:1.5px solid var(--gray200);border-radius:14px;padding:13px;margin-bottom:8px}
+.cost-bar-row{margin-bottom:8px}
+.cost-bar-label{display:flex;justify-content:space-between;margin-bottom:3px}
+.cbl-txt{font-size:10px;font-weight:600;color:var(--gray600)}
+.cbl-amt{font-size:10px;font-weight:800;color:var(--gray800)}
+.cbar-bg{height:6px;background:var(--gray100);border-radius:10px;overflow:hidden}
+.cbar-fill{height:100%;border-radius:10px;transition:width .6s ease}
+
+/* ── SHEETS ── */
+.sheet-ov{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center}
+.sheet-ov.open{display:flex}
+.sheet{width:100%;max-width:430px;background:white;border-radius:20px 20px 0 0;max-height:90vh;overflow-y:auto;animation:sheetUp .35s cubic-bezier(.32,.72,0,1);padding-bottom:24px}
+.sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--gray200);margin:11px auto 0}
+.sheet-inner{padding:16px 18px 8px;position:relative}
+.sheet-title{font-size:18px;font-weight:800;color:var(--gray900);letter-spacing:-.4px;margin-bottom:2px}
+.sheet-sub{font-size:11px;color:var(--gray400);margin-bottom:16px}
+.sheet-sec{margin-bottom:16px}
+.sheet-sec-ttl{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gray400);margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--gray100)}
+.sitem{display:flex;gap:8px;margin-bottom:8px}
+.sitem-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.sitem-ttl{font-size:12px;font-weight:600;color:var(--gray800)}
+.sitem-dtl{font-size:10px;color:var(--gray400);margin-top:1px;line-height:1.4}
+.sclose{position:absolute;top:12px;right:16px;width:28px;height:28px;border-radius:50%;background:var(--gray100);border:none;font-size:14px;color:var(--gray600);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.sbtn{width:100%;padding:13px;background:linear-gradient(135deg,var(--blue-mid),var(--blue));border:none;border-radius:12px;color:white;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,.3);margin-top:5px}
+.sbtn-sec{width:100%;padding:11px;background:var(--gray100);border:none;border-radius:12px;color:var(--gray600);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;margin-top:6px}
+
+/* ── NOTIFICATIONS ── */
+.notif-item{background:white;border:1.5px solid var(--gray200);border-radius:12px;padding:10px 12px;display:flex;gap:9px;margin-bottom:6px}
+.notif-iw{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.notif-title{font-size:11px;font-weight:700;color:var(--gray800);margin-bottom:1px}
+.notif-body{font-size:10px;color:var(--gray500);line-height:1.45}
+.notif-time{font-size:8px;color:var(--gray400);font-weight:600;margin-top:3px}
+.notif-unread{width:6px;height:6px;border-radius:50%;background:var(--blue-mid);flex-shrink:0;margin-top:4px}
+
+/* ── TAB BAR ── */
+.tabbar{
+  position:sticky;bottom:0;z-index:80;
+  background:rgba(255,255,255,.97);backdrop-filter:blur(20px);
+  border-top:1px solid var(--gray200);display:flex;
+}
+.titem{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:8px 4px 6px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;position:relative}
+.ticon{font-size:18px;line-height:1;transition:transform .15s}
+.titem.on .ticon{transform:translateY(-1px)}
+.tlabel{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--gray400)}
+.titem.on .tlabel{color:var(--blue-mid)}
+.tactivedot{width:4px;height:4px;border-radius:50%;background:var(--blue-mid);margin-top:1px}
+.tbadge{position:absolute;top:4px;right:calc(50% - 20px);width:14px;height:14px;background:var(--red);border-radius:50%;font-size:8px;font-weight:800;color:white;display:flex;align-items:center;justify-content:center;border:2px solid white}
+
+/* ══ BOTTOM / FOOTER ══════════════════════════════════════ */
+.bottom-cta{background:var(--gray900);padding:52px 24px 44px;text-align:center}
+.footer{background:#060D18;padding:22px 24px;text-align:center;border-top:1px solid rgba(255,255,255,.05)}
+.footer-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:7px}
+.footer-logo-icon{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,var(--blue-mid),var(--blue));display:flex;align-items:center;justify-content:center;font-size:12px}
+.footer-name{font-size:13px;font-weight:800;color:white;letter-spacing:-.2px}
+.footer-name span{color:#60A5FA}
+.footer-text{font-size:10px;color:rgba(255,255,255,.3);line-height:1.6;max-width:380px;margin:0 auto 6px}
+.footer-by{font-size:10px;color:rgba(255,255,255,.2)}
+.footer-by strong{color:rgba(255,255,255,.4)}
+
+.cta-primary{display:inline-flex;align-items:center;gap:7px;background:var(--blue-mid);color:white;font-size:13px;font-weight:700;padding:12px 24px;border-radius:11px;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.4);transition:all .2s;text-decoration:none;letter-spacing:-.1px}
+.cta-primary:hover{background:var(--blue);transform:translateY(-1px)}
+.cta-secondary{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);font-size:13px;font-weight:600;padding:12px 20px;border-radius:11px;border:1px solid rgba(255,255,255,.15);cursor:pointer;transition:all .2s;text-decoration:none}
+.cta-secondary:hover{background:rgba(255,255,255,.12)}
+.cta-group{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:0}
+
+@media(min-width:600px){.sh-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- ══ 1. WHY THIS MATTERS — FIRST THING PEOPLE SEE ══════ -->
+<div class="landing-why">
+  <div class="lw-eyebrow">Why This Matters</div>
+  <h1 class="lw-headline">The Problem We're<br/><em>Solving</em></h1>
+  <p class="lw-body">
+    Today, <strong>67 million Medicare beneficiaries</strong> have no single view of their longitudinal health history. Care gaps cost payers billions. HEDIS scores suffer. Members are lost.<br/><strong style="color:#60A5FA">MyHealthTimeline changes that.</strong>
+  </p>
+  <div class="sh-grid">
+    <div class="sh-card"><div class="sh-icon">🏛️</div><div class="sh-title">CMS / Medicare</div><div class="sh-desc">Star rating quality improvement, HEDIS gap closure, Blue Button 2.0 data utilization, member engagement mandate</div></div>
+    <div class="sh-card"><div class="sh-icon">💼</div><div class="sh-title">Health Plans & Payers</div><div class="sh-desc">Reduce preventable ER costs, improve medication adherence, close care gaps before audit season</div></div>
+    <div class="sh-card"><div class="sh-icon">🏥</div><div class="sh-title">Providers</div><div class="sh-desc">Pre-visit summaries, longitudinal patient context, care coordination across specialties</div></div>
+    <div class="sh-card"><div class="sh-icon">👤</div><div class="sh-title">Medicare Members</div><div class="sh-desc">Plain-English health history, refill reminders, AI insights, one-tap doctor visit prep</div></div>
+  </div>
+  <a href="#prototype" class="lw-cta">Explore the Prototype &darr;</a>
+</div>
+
+<!-- ══ 2. HERO BANNER WITH APP TITLE ══════════════════════ -->
+<div class="hero-banner">
+  <div class="hb-orb hb-orb1"></div>
+  <div class="hb-orb hb-orb2"></div>
+  <div class="hb-inner">
+    <div class="hb-logo">
+      <div class="hb-logo-icon">🫀</div>
+      <div class="hb-logo-name">MyHealth<span>Timeline</span></div>
+    </div>
+    <p class="hb-tagline">
+      An <strong>AI-powered longitudinal health platform</strong> built on CMS Blue Button 2.0 — giving Medicare members, payers, and providers a complete, actionable view of health history.
+    </p>
+    <div class="hb-pills">
+      <div class="hb-pill">🔒 HIPAA-Aligned Design</div>
+      <div class="hb-pill">📋 HEDIS Quality Measures</div>
+      <div class="hb-pill">🤖 AI-Powered Insights</div>
+      <div class="hb-pill">📱 Mobile-First</div>
+      <div class="hb-pill">🏛️ CMS Blue Button 2.0</div>
+    </div>
+    <a href="#prototype" class="hb-btn">Try the Interactive Prototype &darr;</a>
+  </div>
+</div>
+
+<!-- Feature ticker -->
+<div class="feat-row">
+  <div class="feat-item"><div class="feat-item-icon">📋</div><div class="feat-item-txt">Longitudinal Timeline</div></div>
+  <div class="feat-item"><div class="feat-item-icon">🎯</div><div class="feat-item-txt">HEDIS Care Gap Engine</div></div>
+  <div class="feat-item"><div class="feat-item-icon">🤖</div><div class="feat-item-txt">AI Health Insights</div></div>
+  <div class="feat-item"><div class="feat-item-icon">💰</div><div class="feat-item-txt">Cost Intelligence</div></div>
+  <div class="feat-item"><div class="feat-item-icon">📊</div><div class="feat-item-txt">HEDIS Scorecard</div></div>
+  <div class="feat-item"><div class="feat-item-icon">🩺</div><div class="feat-item-txt">Pre-Visit Summary</div></div>
+  <div class="feat-item"><div class="feat-item-icon">🔔</div><div class="feat-item-txt">Smart Notifications</div></div>
+  <div class="feat-item"><div class="feat-item-icon">💊</div><div class="feat-item-txt">Medication Adherence</div></div>
+</div>
+
+<!-- ══ 3. PROTOTYPE SECTION ═══════════════════════════════ -->
+<div id="prototype" class="proto-label">
+  <div class="proto-label-txt">Interactive Prototype</div>
+  <div class="proto-label-sub">Tap events to expand · Switch tabs to explore all features</div>
+</div>
+
+<div class="app-wrap">
+  <div class="device">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-r1">
+        <div class="logo-wrap">
+          <div class="logo-icon">🫀</div>
+          <span class="logo-name">MyHealth<span>Timeline</span></span>
+        </div>
+        <div class="hbtns">
+          <div class="ibtn" onclick="openSheet('notif')" style="position:relative">🔔<div class="ndot"></div></div>
+          <div class="ibtn" onclick="openSheet('summary')">📋</div>
+          <div class="uav">MR</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGES -->
+    <div id="pg-timeline" class="page" style="display:block"></div>
+    <div id="pg-summary"  class="page" style="display:none"></div>
+    <div id="pg-gaps"     class="page" style="display:none"></div>
+    <div id="pg-cost"     class="page" style="display:none"></div>
+
+    <!-- TAB BAR -->
+    <div class="tabbar">
+      <div class="titem on" id="tab-timeline" onclick="switchTab('timeline')"><div class="ticon">📋</div><div class="tlabel">Timeline</div><div class="tactivedot" id="td-timeline"></div></div>
+      <div class="titem" id="tab-summary" onclick="switchTab('summary')" style="position:relative"><div class="ticon">📊</div><div class="tlabel">Summary</div><div id="td-summary" style="display:none" class="tactivedot"></div></div>
+      <div class="titem" id="tab-gaps" onclick="switchTab('gaps')" style="position:relative"><div class="ticon">🎯</div><div class="tlabel">Gaps</div><div id="td-gaps" style="display:none" class="tactivedot"></div><div class="tbadge">3</div></div>
+      <div class="titem" id="tab-cost" onclick="switchTab('cost')" style="position:relative"><div class="ticon">💰</div><div class="tlabel">Cost</div><div id="td-cost" style="display:none" class="tactivedot"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 4. FOOTER ══════════════════════════════════════════ -->
+<div class="bottom-cta">
+  <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px">Built by a Healthcare Product Leader</div>
+  <div style="font-size:clamp(20px,5vw,28px);font-weight:800;color:white;letter-spacing:-.5px;margin-bottom:8px">Navin R.</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.45);max-width:420px;margin:0 auto 28px;line-height:1.7">Product Manager · Encounter Data Manager (EDM) · Cognizant Health<br/>Healthcare Interoperability · CMS Blue Button 2.0 · FHIR R4 · HEDIS · X12 EDI</div>
+  <div class="cta-group">
+    <a href="https://www.linkedin.com/in/navin-rangarajan-166b5927" target="_blank" class="cta-primary">Connect on LinkedIn</a>
+    <a href="mailto:navin@example.com" class="cta-secondary">Contact for Demo</a>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">
+    <div class="footer-logo-icon">🫀</div>
+    <div class="footer-name">MyHealth<span>Timeline</span></div>
+  </div>
+  <div class="footer-text">An investor-grade product concept demonstrating the power of CMS Blue Button 2.0 for Medicare member engagement, care gap closure, and health plan quality improvement.</div>
+  <div class="footer-by">Prototype by <strong>Navin R.</strong> · 2025 · All data shown is synthetic demo data</div>
+</div>
+
+<!-- ══ SHEETS ══════════════════════════════════════════════ -->
+<div class="sheet-ov" id="sheet-summary" onclick="closeSheet('summary')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-inner">
+      <button class="sclose" onclick="closeSheet('summary')">✕</button>
+      <div class="sheet-title">Pre-Visit Summary</div>
+      <div class="sheet-sub">Margaret R. · March 2, 2026</div>
+      <div class="sheet-sec">
+        <div class="sheet-sec-ttl">⚕️ Active Conditions</div>
+        <div class="sitem"><div class="sitem-dot" style="background:#D97706"></div><div><div class="sitem-ttl">Type 2 Diabetes Mellitus</div><div class="sitem-dtl">HbA1c 6.5% (Sep 2024) · Metformin + Jardiance</div></div></div>
+        <div class="sitem"><div class="sitem-dot" style="background:#DC2626"></div><div><div class="sitem-ttl">Essential Hypertension</div><div class="sitem-dtl">BP 126/76 (Sep 2024) · Lisinopril 20mg</div></div></div>
+        <div class="sitem"><div class="sitem-dot" style="background:#0D9488"></div><div><div class="sitem-ttl">Hyperlipidemia</div><div class="sitem-dtl">LDL 82 mg/dL · Atorvastatin 40mg</div></div></div>
+      </div>
+      <div class="sheet-sec">
+        <div class="sheet-sec-ttl">💊 Current Medications (4 Active)</div>
+        <div class="sitem"><div class="sitem-dot" style="background:#D97706"></div><div><div class="sitem-ttl">Metformin 1000mg</div><div class="sitem-dtl">Twice daily · Adherence: 94%</div></div></div>
+        <div class="sitem"><div class="sitem-dot" style="background:#D97706"></div><div><div class="sitem-ttl">Lisinopril 20mg</div><div class="sitem-dtl">Once daily · Adherence: 97%</div></div></div>
+        <div class="sitem"><div class="sitem-dot" style="background:#D97706"></div><div><div class="sitem-ttl">Atorvastatin 40mg</div><div class="sitem-dtl">Bedtime · Adherence: 91%</div></div></div>
+        <div class="sitem"><div class="sitem-dot" style="background:#D97706"></div><div><div class="sitem-ttl">Jardiance 10mg</div><div class="sitem-dtl">Morning · Adherence: 98%</div></div></div>
+      </div>
+      <div class="sheet-sec">
+        <div class="sheet-sec-ttl" style="color:#92400E">⚠️ Overdue Screenings</div>
+        <div class="sitem"><div class="sitem-dot" style="background:#DC2626"></div><div><div class="sitem-ttl">Mammogram</div><div class="sitem-dtl">Overdue since 2020 · HEDIS BCS</div></div></div>
+        <div class="sitem"><div class="sitem-dot" style="background:#DC2626"></div><div><div class="sitem-ttl">Diabetic Eye Exam</div><div class="sitem-dtl">Overdue since 2019 · HEDIS EED</div></div></div>
+        <div class="sitem"><div class="sitem-dot" style="background:#D97706"></div><div><div class="sitem-ttl">Colonoscopy</div><div class="sitem-dtl">Due 2026 · HEDIS COL</div></div></div>
+      </div>
+      <div class="sheet-sec">
+        <div class="sheet-sec-ttl">🧪 Recent Labs (Sep 2024)</div>
+        <div class="sitem"><div class="sitem-dot" style="background:#059669"></div><div class="sitem-ttl" style="font-weight:500;font-size:11px">HbA1c: 6.5% — Best in 5 years</div></div>
+        <div class="sitem"><div class="sitem-dot" style="background:#059669"></div><div class="sitem-ttl" style="font-weight:500;font-size:11px">LDL: 82 mg/dL — On target</div></div>
+        <div class="sitem"><div class="sitem-dot" style="background:#059669"></div><div class="sitem-ttl" style="font-weight:500;font-size:11px">BP: 126/76 — Well controlled</div></div>
+        <div class="sitem"><div class="sitem-dot" style="background:#059669"></div><div class="sitem-ttl" style="font-weight:500;font-size:11px">Kidney (eGFR): Normal</div></div>
+      </div>
+      <button class="sbtn">📱 Share QR Code with Doctor</button>
+      <button class="sbtn-sec">📄 Export as PDF</button>
+      <button class="sbtn-sec">🔗 Secure Link for Care Team</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet-ov" id="sheet-notif" onclick="closeSheet('notif')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-inner">
+      <button class="sclose" onclick="closeSheet('notif')">✕</button>
+      <div class="sheet-title">Notifications</div>
+      <div class="sheet-sub">3 unread updates</div>
+      <div class="notif-item" style="border-color:#DBEAFE;background:#F8FAFC"><div class="notif-iw" style="background:#FEF3C7">⚠️</div><div style="flex:1;min-width:0"><div class="notif-title">Mammogram Overdue</div><div class="notif-body">Last mammogram was in 2019. Early screening can be lifesaving. Dr. Patel recommends scheduling this month.</div><div class="notif-time">Today, 9:04 AM</div></div><div class="notif-unread"></div></div>
+      <div class="notif-item" style="border-color:#DBEAFE;background:#F8FAFC"><div class="notif-iw" style="background:#D1FAE5">🧪</div><div style="flex:1;min-width:0"><div class="notif-title">Lab Results Ready</div><div class="notif-body">September 2024 annual labs are ready. HbA1c: 6.5% — your best result in 5 years!</div><div class="notif-time">Yesterday, 3:22 PM</div></div><div class="notif-unread"></div></div>
+      <div class="notif-item" style="border-color:#DBEAFE;background:#F8FAFC"><div class="notif-iw" style="background:#DBEAFE">💊</div><div style="flex:1;min-width:0"><div class="notif-title">Refill Reminder — Lisinopril</div><div class="notif-body">Your Lisinopril refill is due in 5 days (Mar 22). Tap to request refill through your pharmacy.</div><div class="notif-time">Mar 18, 11:00 AM</div></div><div class="notif-unread"></div></div>
+      <div class="notif-item"><div class="notif-iw" style="background:#CCFBF1">🩺</div><div style="flex:1;min-width:0"><div class="notif-title">Pre-Visit Prep Ready</div><div class="notif-body">Upcoming appointment with Dr. Patel on Apr 3 — your pre-visit summary is ready to share.</div><div class="notif-time">Mar 17, 8:30 AM</div></div></div>
+      <div class="notif-item"><div class="notif-iw" style="background:#D1FAE5">🏆</div><div style="flex:1;min-width:0"><div class="notif-title">Health Goal Achieved!</div><div class="notif-body">You've maintained HbA1c below 7.0% for 3 consecutive quarters. Excellent diabetes management.</div><div class="notif-time">Mar 10, 2:15 PM</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ JAVASCRIPT ══════════════════════════════════════════ -->
+<script>
+const EVENTS=[
+  {id:1, date:"2015-03-12",year:2015,type:"lab",       title:"Blood Panel & HbA1c",            code:"CPT 80053, 83036", cost:280,  copay:28,  planPaid:252,  plain:"Routine blood chemistry plus diabetes screening. HbA1c returned at 6.2% — just above the prediabetes threshold of 5.7%. Dr. Patel recommended dietary changes and a 6-month follow-up.", provider:"Desert Valley Lab, Phoenix AZ", condition:["diabetes"],              gap:false,preventable:false,quality:"HEDIS: HbA1c Control"},
+  {id:2, date:"2015-09-04",year:2015,type:"preventive",title:"Annual Wellness Visit",           code:"HCPCS G0438",      cost:350,  copay:0,   planPaid:350,  plain:"First Annual Wellness Visit under Medicare. Blood pressure 138/86 — borderline high. Referred to cardiologist for evaluation.", provider:"Dr. Sarah Patel, PCP", condition:[],                        gap:false,preventable:false,quality:"HEDIS: AWV"},
+  {id:3, date:"2016-01-22",year:2016,type:"rx",         title:"Metformin 500mg Started",        code:"NDC 57664037718",  cost:45,   copay:8,   planPaid:37,   plain:"Metformin is the first-line medication for Type 2 diabetes. It lowers blood sugar by reducing glucose produced by your liver. Prescribed after HbA1c rose to 6.8%.", provider:"Dr. Sarah Patel, PCP", condition:["diabetes"],              gap:false,preventable:false,quality:"HEDIS: Diabetes Rx Mgmt"},
+  {id:4, date:"2016-04-15",year:2016,type:"procedure",  title:"Colonoscopy Screening",          code:"CPT 45378",        cost:3200, copay:0,   planPaid:3200, plain:"Routine colon cancer screening recommended every 10 years. No polyps found. Next screening due: 2026.", provider:"Southwest Gastroenterology", condition:[],                        gap:false,preventable:false,quality:"HEDIS: Colorectal Screening"},
+  {id:5, date:"2016-11-08",year:2016,type:"rx",         title:"Lisinopril 10mg Started",        code:"NDC 68180051403",  cost:55,   copay:10,  planPaid:45,   plain:"An ACE inhibitor used to treat high blood pressure and protect kidneys in people with diabetes. Started after BP consistently measured above 140/90.", provider:"Dr. Michael Torres, Cardiologist", condition:["hypertension"],        gap:false,preventable:false,quality:"HEDIS: Hypertension Control"},
+  {id:6, date:"2017-02-19",year:2017,type:"lab",        title:"Comprehensive Metabolic Panel",  code:"CPT 80053",        cost:310,  copay:31,  planPaid:279,  plain:"Broad blood test checking kidney function, liver enzymes, blood sugar, and electrolytes. HbA1c improved to 6.5% — diabetes responding well to Metformin.", provider:"Desert Valley Lab", condition:["diabetes"],              gap:false,preventable:false,quality:"HEDIS: HbA1c Control"},
+  {id:7, date:"2017-08-30",year:2017,type:"er",         title:"ER Visit — Chest Pain",          code:"ICD-10 R07.9",     cost:8200, copay:820, planPaid:0,    plain:"Presented with chest tightness. EKG and troponin showed NO cardiac event. Diagnosed as musculoskeletal chest pain. Discharged same day. Potentially preventable with better BP management.", provider:"Banner Desert Medical Center", condition:["hypertension"],       gap:true, preventable:true, quality:""},
+  {id:8, date:"2018-01-11",year:2018,type:"rx",         title:"Metformin Increased to 1000mg",  code:"NDC 57664037718",  cost:55,   copay:10,  planPaid:45,   plain:"Metformin dose doubled after HbA1c crept back up to 7.2%. Higher doses more effectively reduce liver glucose production.", provider:"Dr. Sarah Patel, PCP", condition:["diabetes"],              gap:false,preventable:false,quality:""},
+  {id:9, date:"2018-06-03",year:2018,type:"procedure",  title:"Diabetic Eye Exam",              code:"CPT 92250",        cost:420,  copay:42,  planPaid:378,  plain:"Annual retinal imaging to check for diabetic retinopathy. Mild background changes noted, no treatment needed. Annual exam recommended.", provider:"Arizona Eye Associates", condition:["diabetes"],             gap:false,preventable:false,quality:"HEDIS: Retinal Eye Exam"},
+  {id:10,date:"2018-12-14",year:2018,type:"lab",        title:"Lipid Panel & HbA1c",            code:"CPT 80061, 83036", cost:290,  copay:29,  planPaid:261,  plain:"LDL: 142 mg/dL — above target. HbA1c: 7.0%. Dr. Patel discussed starting a statin to protect the heart.", provider:"Desert Valley Lab", condition:["diabetes"],              gap:false,preventable:false,quality:"HEDIS: LDL Control"},
+  {id:11,date:"2019-03-07",year:2019,type:"rx",         title:"Atorvastatin 20mg Started",      code:"NDC 00071015334",  cost:65,   copay:12,  planPaid:53,   plain:"Atorvastatin (Lipitor) lowers LDL cholesterol and reduces cardiovascular risk. People with diabetes have higher heart disease risk, making statins standard care.", provider:"Dr. Sarah Patel, PCP", condition:["diabetes","hypertension"],gap:false,preventable:false,quality:"HEDIS: Statin Use"},
+  {id:12,date:"2019-07-22",year:2019,type:"preventive", title:"Mammogram Screening",            code:"CPT 77067",        cost:510,  copay:0,   planPaid:510,  plain:"Annual screening mammogram. Results: No suspicious findings. Note: This was the last mammogram on record — now 5 years overdue.", provider:"Banner Imaging — Chandler AZ", condition:[],                gap:false,preventable:false,quality:"HEDIS: Breast Cancer Screening"},
+  {id:13,date:"2020-01-30",year:2020,type:"lab",        title:"HbA1c & Kidney Function",       code:"CPT 83036, 82565", cost:275,  copay:28,  planPaid:247,  plain:"HbA1c: 6.9% — good control. eGFR normal. Diabetes-related kidney disease not detected.", provider:"Desert Valley Lab", condition:["diabetes"],              gap:false,preventable:false,quality:"HEDIS: Kidney Health"},
+  {id:14,date:"2020-04-12",year:2020,type:"procedure",  title:"Telehealth — COVID Consult",    code:"CPT 99213-95",     cost:185,  copay:18,  planPaid:167,  plain:"Remote video visit during COVID-19 pandemic. Reviewed chronic disease management. All medications continued.", provider:"Dr. Sarah Patel, PCP (Telehealth)", condition:[],           gap:false,preventable:false,quality:""},
+  {id:15,date:"2021-02-18",year:2021,type:"er",         title:"ER — Hypoglycemia Episode",     code:"ICD-10 E11.649",   cost:6400, copay:640, planPaid:0,    plain:"Blood sugar dropped to 48 mg/dL — dangerously low. Treated with IV glucose. Metformin dosing adjusted. Preventable with proper medication education.", provider:"Chandler Regional Medical Center", condition:["diabetes"],   gap:true, preventable:true, quality:""},
+  {id:16,date:"2021-08-05",year:2021,type:"rx",         title:"Lisinopril Increased to 20mg",  code:"NDC 68180051403",  cost:65,   copay:12,  planPaid:53,   plain:"Blood pressure running 148/94 despite 10mg dose. Increased to 20mg. Target: below 130/80.", provider:"Dr. Michael Torres, Cardiologist", condition:["hypertension"],        gap:false,preventable:false,quality:""},
+  {id:17,date:"2022-03-24",year:2022,type:"lab",        title:"Annual Comprehensive Labs",     code:"CPT 80053, 83036", cost:390,  copay:39,  planPaid:351,  plain:"HbA1c: 7.1% — slightly above target. LDL: 88 mg/dL — great improvement. Kidney stable. Thyroid normal.", provider:"Desert Valley Lab", condition:["diabetes","hypertension"],gap:false,preventable:false,quality:"HEDIS: HbA1c, LDL"},
+  {id:18,date:"2022-09-01",year:2022,type:"procedure",  title:"Cardiac Stress Test (EKG)",     code:"CPT 93015",        cost:1850, copay:185, planPaid:1665, plain:"Treadmill test measuring heart response to physical stress. Result: Normal. No signs of blockage or abnormal rhythm. Cleared for moderate exercise.", provider:"Arizona Heart Rhythm", condition:["hypertension"],   gap:false,preventable:false,quality:""},
+  {id:19,date:"2023-01-17",year:2023,type:"rx",         title:"Jardiance 10mg Added",          code:"NDC 00597018030",  cost:485,  copay:48,  planPaid:437,  plain:"Empagliflozin lowers blood sugar by making kidneys excrete excess glucose. Also has proven heart and kidney protective benefits.", provider:"Dr. Sarah Patel, PCP", condition:["diabetes"],              gap:false,preventable:false,quality:"HEDIS: SGLT2 for CKD"},
+  {id:20,date:"2023-06-08",year:2023,type:"lab",        title:"HbA1c Post-Jardiance",          code:"CPT 83036",        cost:185,  copay:18,  planPaid:167,  plain:"HbA1c dropped from 7.1% to 6.7% — clinically significant. BP also improved: 128/78. Excellent medication response.", provider:"Desert Valley Lab", condition:["diabetes"],              gap:false,preventable:false,quality:"HEDIS: HbA1c Control"},
+  {id:21,date:"2023-11-14",year:2023,type:"preventive", title:"Bone Density Scan (DEXA)",      code:"CPT 77080",        cost:380,  copay:0,   planPaid:380,  plain:"T-score: -1.4 (low bone density, not yet osteoporosis). Calcium and Vitamin D supplements recommended.", provider:"Banner Imaging — Chandler AZ", condition:[],               gap:false,preventable:false,quality:"HEDIS: Osteoporosis Screening"},
+  {id:22,date:"2024-04-02",year:2024,type:"er",         title:"Urgent Care — Complicated UTI", code:"ICD-10 N39.0",     cost:1850, copay:185, planPaid:0,    plain:"UTI with fever 101.8°F. E. coli confirmed. Ciprofloxacin 7 days. Resolved. People with diabetes have higher risk of complicated UTIs.", provider:"NextCare Urgent Care, Tempe", condition:["diabetes"],          gap:true, preventable:true, quality:""},
+  {id:23,date:"2024-09-19",year:2024,type:"lab",        title:"Annual Labs + Diabetic Panel",  code:"CPT 80053, 83036", cost:420,  copay:42,  planPaid:378,  plain:"HbA1c: 6.5% — best in 5 years. Urine albumin: normal. LDL: 82 mg/dL. BP: 126/76. All targets met.", provider:"Desert Valley Lab", condition:["diabetes","hypertension"],gap:false,preventable:false,quality:"HEDIS: HbA1c, BP, LDL"},
+  {id:24,date:"2025-02-11",year:2025,type:"procedure",  title:"Diabetic Foot Exam",            code:"CPT 99213+G0463",  cost:310,  copay:31,  planPaid:279,  plain:"Monofilament sensation test: normal in both feet. Foot pulses strong. No ulcers or deformities. Continue daily foot inspection.", provider:"Dr. Sarah Patel, PCP", condition:["diabetes"],              gap:false,preventable:false,quality:"HEDIS: Foot Exam"},
+  {id:25,date:"2025-07-30",year:2025,type:"rx",         title:"Atorvastatin Increased to 40mg",code:"NDC 00071015334",  cost:75,   copay:15,  planPaid:60,   plain:"New guidelines recommend higher-intensity statins for people with diabetes over 65. New LDL target: below 70 mg/dL.", provider:"Dr. Sarah Patel, PCP", condition:["diabetes","hypertension"],gap:false,preventable:false,quality:"HEDIS: High-Intensity Statin"},
+];
+const TYPE={
+  er:        {label:"Urgent Care",short:"ER",  color:"#DC2626",bg:"#FEE2E2",icon:"🚨"},
+  lab:       {label:"Lab / Test", short:"Lab", color:"#059669",bg:"#D1FAE5",icon:"🧪"},
+  rx:        {label:"Medication", short:"Rx",  color:"#B45309",bg:"#FEF3C7",icon:"💊"},
+  procedure: {label:"Procedure",  short:"Proc",color:"#0D9488",bg:"#CCFBF1",icon:"⚕️"},
+  preventive:{label:"Preventive", short:"Prev",color:"#0891B2",bg:"#CFFAFE",icon:"🛡️"},
+};
+const MISSED=[
+  {name:"Mammogram",         due:"Overdue since 2020",urgency:"critical",impact:"Early detection reduces mortality by 30%",hedis:"HEDIS BCS",savings:42000},
+  {name:"Diabetic Eye Exam", due:"Overdue since 2019",urgency:"critical",impact:"Prevents vision loss in 95% of cases if caught early",hedis:"HEDIS EED",savings:18000},
+  {name:"Colonoscopy",       due:"Due 2026",          urgency:"upcoming",impact:"Screening prevents 68% of colorectal cancers",hedis:"HEDIS COL",savings:95000},
+];
+const MEDS=[
+  {name:"Metformin 1000mg",  dose:"Twice daily",   for:"Diabetes",       adherence:94,refillDue:"Mar 15"},
+  {name:"Lisinopril 20mg",   dose:"Once daily",    for:"Blood Pressure",  adherence:97,refillDue:"Mar 22"},
+  {name:"Atorvastatin 40mg", dose:"Bedtime",       for:"Cholesterol",     adherence:91,refillDue:"Apr 1"},
+  {name:"Jardiance 10mg",    dose:"Morning",       for:"Diabetes+Heart",  adherence:98,refillDue:"Mar 28"},
+];
+const VITALS=[
+  {label:"HbA1c",   value:"6.5",   unit:"%",     trend:"↓ Best in 5 yrs",good:true, target:"< 7.0%",  history:[7.2,7.0,7.1,6.9,6.7,6.5]},
+  {label:"BP",      value:"126/76",unit:"mmHg",  trend:"✓ At target",    good:true, target:"< 130/80", history:[148,140,138,134,130,126]},
+  {label:"LDL",     value:"82",    unit:"mg/dL", trend:"↓ On statin",    good:true, target:"< 100",    history:[142,110,95,90,88,82]},
+  {label:"eGFR",    value:"72",    unit:"mL/min",trend:"→ Stable",       good:true, target:"> 60",     history:[74,73,72,72,71,72]},
+];
+const HEDIS=[
+  {name:"HbA1c Control (<7%)",         status:"Met",pct:87, color:"#059669"},
+  {name:"BP Control (<130/80)",         status:"Met",pct:91, color:"#059669"},
+  {name:"Breast Cancer Screening",      status:"Gap",pct:0,  color:"#DC2626"},
+  {name:"Retinal Eye Exam",             status:"Gap",pct:0,  color:"#DC2626"},
+  {name:"LDL Cholesterol Control",      status:"Met",pct:94, color:"#059669"},
+  {name:"Colorectal Cancer Screening",  status:"Due",pct:60, color:"#D97706"},
+  {name:"Statin Use in Diabetes",       status:"Met",pct:100,color:"#059669"},
+  {name:"Annual Foot Exam",             status:"Met",pct:100,color:"#059669"},
+];
+const CARE=[
+  {emoji:"👩‍⚕️",name:"Dr. Sarah Patel",    spec:"Primary Care Physician",   last:"Last visit: Sep 19, 2024",bg:"#EFF6FF"},
+  {emoji:"❤️",  name:"Dr. Michael Torres",spec:"Cardiologist",              last:"Last visit: Aug 5, 2021", bg:"#FEF2F2"},
+  {emoji:"👁️",  name:"Dr. Linda Chan",     spec:"Ophthalmologist",          last:"Last visit: Jun 3, 2018", bg:"#ECFDF5"},
+  {emoji:"🔬",  name:"Desert Valley Lab",  spec:"Laboratory Services",      last:"Last visit: Sep 19, 2024",bg:"#F0FDFA"},
+];
+
+let curTab="timeline",expandedId=null,typeFilter=["all"],condFilter=null;
+const usd=n=>"$"+n.toLocaleString();
+const fmts=d=>new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric"});
+const fmt =d=>new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+const totalCost=EVENTS.reduce((a,b)=>a+b.cost,0);
+const totalPlan=EVENTS.reduce((a,b)=>a+b.planPaid,0);
+const totalCopay=EVENTS.reduce((a,b)=>a+b.copay,0);
+const preventCost=EVENTS.filter(e=>e.preventable).reduce((a,b)=>a+b.cost,0);
+const typeCounts={};Object.keys(TYPE).forEach(t=>{typeCounts[t]=EVENTS.filter(e=>e.type===t).length;});
+const typeOn=k=>k==="all"?typeFilter.includes("all"):(!typeFilter.includes("all")&&typeFilter.includes(k));
+
+function toggleType(k){
+  if(k==="all"){typeFilter=["all"];renderTimeline();return;}
+  const n=typeFilter.filter(x=>x!=="all");
+  if(n.includes(k)){const r=n.filter(x=>x!==k);typeFilter=r.length===0?["all"]:r;}
+  else{const r=[...n,k];typeFilter=r.length===5?["all"]:r;}
+  renderTimeline();
+}
+function toggleCond(c){condFilter=condFilter===c?null:c;renderTimeline();}
+function openSheet(id){document.getElementById('sheet-'+id).classList.add('open');}
+function closeSheet(id){document.getElementById('sheet-'+id).classList.remove('open');}
+function switchTab(t){
+  document.querySelectorAll('.titem').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('[id^="td-"]').forEach(el=>el.style.display='none');
+  document.querySelectorAll('[id^="pg-"]').forEach(el=>el.style.display='none');
+  document.getElementById('tab-'+t).classList.add('on');
+  document.getElementById('td-'+t).style.display='flex';
+  document.getElementById('pg-'+t).style.display='block';
+  curTab=t;
+  if(t==="timeline")renderTimeline();
+  else if(t==="summary")renderSummary();
+  else if(t==="gaps")renderGaps();
+  else if(t==="cost")renderCost();
+}
+function toggleEvent(id){expandedId=expandedId===id?null:id;if(curTab==="timeline")renderTimeline();}
+
+function renderTimeline(){
+  const filtered=EVENTS.filter(e=>(typeFilter.includes("all")||typeFilter.includes(e.type))&&(!condFilter||e.condition.includes(condFilter))).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const grouped=filtered.reduce((acc,e)=>{if(!acc[e.year])acc[e.year]=[];acc[e.year].push(e);return acc;},{});
+  const years=Object.keys(grouped).map(Number).sort((a,b)=>b-a);
+  let html=`
+  <div class="hcard">
+    <div class="hc-top">
+      <div style="display:flex;align-items:center;gap:9px">
+        <div class="hc-av">MR</div>
+        <div><div class="hc-name">Margaret R.</div><div class="hc-sub">Medicare Advantage · Phoenix, AZ · Age 67</div><div class="hc-id">✓ Medicare ID: 1EG4-TE5-MK72</div></div>
+      </div>
+      <div class="hc-risk"><div class="hc-risk-val">34</div><div class="hc-risk-lbl">Risk Score</div></div>
+    </div>
+    <div class="hc-stats">
+      <div class="hstat"><div class="hstat-val">25</div><div class="hstat-lbl">Events</div></div>
+      <div class="hstat"><div class="hstat-val">10yr</div><div class="hstat-lbl">History</div></div>
+      <div class="hstat"><div class="hstat-val">4</div><div class="hstat-lbl">Meds</div></div>
+      <div class="hstat"><div class="hstat-val">3</div><div class="hstat-lbl">Gaps</div></div>
+    </div>
+  </div>
+  <div class="alert-strip">
+    <div class="alert-em">⚠️</div>
+    <div><div class="alert-title">3 Care Gaps — Action Needed</div>
+    <div class="apills"><span class="apill crit">🔴 Mammogram</span><span class="apill crit">🔴 Eye Exam</span><span class="apill up">🟡 Colonoscopy</span></div></div>
+  </div>
+  <div class="ai-card">
+    <div class="ai-hdr"><div class="ai-icon">✦</div><div><div class="ai-title">AI Health Insights</div><div class="ai-sub">Derived from your complete health history</div></div></div>
+    <div class="ai-sug"><div class="ai-sug-i">📉</div><div>HbA1c dropped 0.6% since starting Jardiance — clinically significant. Continue current regimen.</div></div>
+    <div class="ai-sug"><div class="ai-sug-i">💊</div><div>3 of your 4 medications have generic equivalents that could reduce out-of-pocket costs by ~$380/year.</div></div>
+    <div class="ai-sug"><div class="ai-sug-i">🏥</div><div>Your 3 ER visits share a common pattern: preventable with proactive chronic disease management.</div></div>
+  </div>
+  <div class="iscroll">
+    ${[
+      {icon:"💰",title:"Total Care Cost",val:usd(totalCost),sub:"Plan paid 90%",badge:"10yr span",bc:"#DBEAFE",tc:"#1E40AF"},
+      {icon:"🛡️",title:"Preventable ER",val:usd(preventCost),sub:"3 visits flagged",badge:"High Risk",bc:"#FEE2E2",tc:"#B91C1C"},
+      {icon:"🏆",title:"HEDIS Met",val:"6 / 8",sub:"Quality measures",badge:"Star Rating",bc:"#D1FAE5",tc:"#047857"},
+      {icon:"📊",title:"Quality Score",val:"87 / 100",sub:"Above average",badge:"Top 15%",bc:"#CCFBF1",tc:"#0F766E"},
+      {icon:"💊",title:"Med Adherence",val:"95%",sub:"Across 4 meds",badge:"Excellent",bc:"#D1FAE5",tc:"#047857"},
+    ].map(c=>`<div class="icard"><div class="icard-icon">${c.icon}</div><div class="icard-title">${c.title}</div><div class="icard-val">${c.val}</div><div class="icard-sub">${c.sub}</div><div class="icard-badge" style="background:${c.bc};color:${c.tc}">${c.badge}</div></div>`).join('')}
+  </div>
+  <div class="cond-row">
+    <div class="cpill ${!condFilter?"on":""}" style="${!condFilter?"background:#1E293B;color:white;border-color:#1E293B":""}" onclick="toggleCond(null)">All Conditions</div>
+    <div class="cpill ${condFilter==="diabetes"?"on":""}" style="${condFilter==="diabetes"?"background:#FEF3C7;color:#92400E;border-color:#D97706":""}" onclick="toggleCond('diabetes')"><div class="cdot" style="background:#D97706"></div>Diabetes</div>
+    <div class="cpill ${condFilter==="hypertension"?"on":""}" style="${condFilter==="hypertension"?"background:#FEE2E2;color:#991B1B;border-color:#DC2626":""}" onclick="toggleCond('hypertension')"><div class="cdot" style="background:#DC2626"></div>Hypertension</div>
+  </div>
+  <div class="fscroll">
+    <div class="fchip ${typeOn("all")?"on":""}" style="${typeOn("all")?"background:#1E293B;border-color:#1E293B":""}" onclick="toggleType('all')">All ${typeOn("all")?`<span class="fcnt">${EVENTS.length}</span>`:""}</div>
+    ${Object.entries(TYPE).map(([k,m])=>`<div class="fchip ${typeOn(k)?"on":""}" style="${typeOn(k)?`background:${m.color};border-color:${m.color}`:""}" onclick="toggleType('${k}')">${m.icon} ${m.label}${typeOn(k)?` <span class="fcnt">${typeCounts[k]}</span>`:""}</div>`).join('')}
+  </div>`;
+  if(!filtered.length){
+    html+=`<div style="text-align:center;padding:50px 0;color:#94A3B8"><div style="font-size:36px;margin-bottom:10px">🔍</div><div style="font-weight:700;font-size:15px;color:#475569;margin-bottom:4px">No events found</div><div style="font-size:12px">Adjust your filters above.</div></div>`;
+  } else {
+    years.forEach(year=>{
+      html+=`<div class="yhdr"><div class="ybadge">${year}</div><div class="yline"></div><div class="ycount">${grouped[year].length} events</div></div>`;
+      grouped[year].forEach(evt=>{
+        const m=TYPE[evt.type];const open=expandedId===evt.id;
+        html+=`<div class="ecard ${open?"open":""}" style="${open?`box-shadow:0 4px 20px ${m.color}22;border-color:${m.color}45`:""}" onclick="toggleEvent(${evt.id})">
+          <div class="etop">
+            <div class="eicon" style="background:${m.bg}">${m.icon}</div>
+            <div class="emain"><div class="etitle">${evt.title}</div><div class="esub"><span class="etbadge" style="background:${m.bg};color:${m.color}">${m.short}</span><span class="edate">${fmts(evt.date)}</span>${evt.gap?'<div class="egapdot"></div>':''}</div></div>
+            <div class="echev ${open?"open":""}">▾</div>
+          </div>
+          ${open?`<div class="edetail">
+            <div class="edetail-txt">${evt.plain}</div>
+            <div class="ecost-row">
+              <div class="ecost-card"><div class="ecost-val">${usd(evt.cost)}</div><div class="ecost-lbl">Total Cost</div></div>
+              <div class="ecost-card"><div class="ecost-val">${usd(evt.copay)}</div><div class="ecost-lbl">Your Copay</div></div>
+              <div class="ecost-card"><div class="ecost-val" style="color:${evt.planPaid>0?"#059669":"#DC2626"}">${usd(evt.planPaid)}</div><div class="ecost-lbl">Plan Paid</div></div>
+            </div>
+            <div class="emeta"><div class="emeta-row">🏥 <span>${evt.provider}</span></div><div class="emeta-row">🔖 <span>${evt.code}</span></div><div class="emeta-row">📅 <span>${fmt(evt.date)}</span></div></div>
+            <div class="etags">
+              ${evt.condition.map(c=>`<span class="etag" style="background:${c==="diabetes"?"#FEF3C7":"#FEE2E2"};color:${c==="diabetes"?"#92400E":"#991B1B"}">${c==="diabetes"?"Diabetes":"Hypertension"}</span>`).join("")}
+              ${evt.quality?`<span class="ehedis">${evt.quality}</span>`:""}
+              ${evt.preventable?`<span class="etag" style="background:#FEE2E2;color:#991B1B">Preventable</span>`:""}
+            </div>
+            ${evt.preventable?`<div class="egap-warn">⚠ This visit was flagged as potentially preventable with better chronic disease management.</div>`:""}
+          </div>`:""}
+        </div>`;
+      });
+    });
+  }
+  document.getElementById('pg-timeline').innerHTML=html;
+}
+
+function renderSummary(){
+  document.getElementById('pg-summary').innerHTML=`
+  <div style="margin-bottom:14px"><div style="font-size:18px;font-weight:800;color:#0F172A;letter-spacing:-.4px">Health Dashboard</div><div style="font-size:11px;color:#94A3B8;margin-top:2px">Real-time vitals & active care plan</div></div>
+  <div class="vgrid">${VITALS.map(v=>{
+    const max=Math.max(...v.history),min=Math.min(...v.history);
+    const bars=v.history.map((val,i)=>({h:min===max?50:10+((val-min)/(max-min))*36,last:i===v.history.length-1}));
+    return`<div class="vcard"><div class="vlbl">${v.label}</div><div class="vval">${v.value} <span class="vunit">${v.unit}</span></div><div class="vtrend ${v.good?"g":"w"}">${v.trend}</div><div class="vtarget">Target: ${v.target}</div><div class="sparkbar">${bars.map(b=>`<div class="sbar" style="height:${b.h}px;background:${b.last?(v.good?"#059669":"#DC2626"):"#E2E8F0"}"></div>`).join("")}</div></div>`;
+  }).join("")}</div>
+  <div style="margin-bottom:9px"><div style="font-size:13px;font-weight:800;color:#0F172A">Current Medications</div></div>
+  ${MEDS.map(m=>`<div class="med-row"><div style="font-size:18px">💊</div><div style="flex:1;min-width:0"><div class="med-name">${m.name}</div><div class="med-detail">${m.dose} · ${m.for} · Refill ${m.refillDue}</div></div><div style="text-align:right;flex-shrink:0"><div class="med-adh-pct">${m.adherence}%</div><div class="med-adh-lbl">Adherence</div><div class="med-adh-bar"><div class="med-adh-fill" style="width:${m.adherence}%;background:${m.adherence>90?"#059669":"#D97706"}"></div></div></div></div>`).join("")}
+  <div style="margin:16px 0 9px"><div style="font-size:13px;font-weight:800;color:#0F172A">HEDIS Quality Measures</div></div>
+  <div class="hedis-card">${HEDIS.map((h,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="flex:1"><div class="hedis-name">${h.name}</div><div class="hedis-status" style="color:${h.color}">${h.status==="Met"?"✓ Met":h.status==="Gap"?"⚠ Care Gap":"⏱ Due Soon"}</div></div><div class="hedis-pct" style="color:${h.color}">${h.status==="Gap"?"—":h.pct+"%"}</div></div><div class="hedis-bar-bg" style="margin-bottom:${i<HEDIS.length-1?8:0}px"><div class="hedis-bar-fill" style="width:${h.pct||4}%;background:${h.color}"></div></div>`).join("")}</div>
+  <div style="margin:16px 0 9px"><div style="font-size:13px;font-weight:800;color:#0F172A">Care Team</div></div>
+  ${CARE.map(c=>`<div class="care-card"><div class="care-av" style="background:${c.bg}">${c.emoji}</div><div style="flex:1;min-width:0"><div class="care-name">${c.name}</div><div class="care-spec">${c.spec}</div><div class="care-last">${c.last}</div></div><button class="care-msg">Message</button></div>`).join("")}`;
+}
+
+function renderGaps(){
+  const totalSavings=MISSED.reduce((a,b)=>a+b.savings,0);
+  document.getElementById('pg-gaps').innerHTML=`
+  <div style="margin-bottom:12px"><div style="font-size:18px;font-weight:800;color:#0F172A;letter-spacing:-.4px">Care Gaps & Quality</div><div style="font-size:11px;color:#94A3B8;margin-top:2px">HEDIS-aligned gaps and projected savings</div></div>
+  <div class="cost-hero">
+    <div style="font-size:9px;color:rgba(255,255,255,.45);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Projected savings if gaps closed</div>
+    <div class="cost-hero-val">${usd(totalSavings)}</div>
+    <div class="cost-hero-lbl">Avoidable downstream costs across 3 open gaps</div>
+    <div class="chg-grid">
+      <div class="chg-card"><div class="chg-val">3</div><div class="chg-lbl">Open Gaps</div></div>
+      <div class="chg-card"><div class="chg-val">2</div><div class="chg-lbl">Critical</div></div>
+      <div class="chg-card"><div class="chg-val">87</div><div class="chg-lbl">Quality Score</div></div>
+    </div>
+  </div>
+  ${MISSED.map(s=>`<div class="gap-card">
+    <div class="gap-hdr"><div class="gap-icon-wrap" style="background:${s.urgency==="critical"?"#FEE2E2":"#FEF3C7"}">${s.urgency==="critical"?"🔴":"🟡"}</div><div><div class="gap-title">${s.name}</div><div class="gap-meta">${s.due}</div></div></div>
+    <div class="gap-hedis">${s.hedis}</div>
+    <div class="gap-impact">⚕️ ${s.impact}</div>
+    <div class="gap-savings">💰 Closing this gap could prevent ${usd(s.savings)} in downstream costs</div>
+    <div class="gap-btns"><button class="gbtn p">📅 Schedule Screening</button><button class="gbtn s">Learn More</button></div>
+  </div>`).join("")}
+  <div style="margin:16px 0 9px"><div style="font-size:13px;font-weight:800;color:#0F172A">Preventable ER Visits</div></div>
+  ${EVENTS.filter(e=>e.preventable).map(g=>`<div class="gap-card">
+    <div class="gap-hdr"><div class="gap-icon-wrap" style="background:#FEE2E2">🏥</div><div><div class="gap-title">${g.title}</div><div class="gap-meta">${fmts(g.date)} · ${usd(g.cost)} billed</div></div></div>
+    <div class="gap-impact">⚠ Flagged as potentially preventable with better chronic condition management.</div>
+    <div class="gap-savings">💰 Your copay: ${usd(g.copay)} · Total billed: ${usd(g.cost)}</div>
+  </div>`).join("")}`;
+}
+
+function renderCost(){
+  const yrs=[2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+  const yrMax=Math.max(...yrs.map(y=>EVENTS.filter(e=>e.year===y).reduce((a,b)=>a+b.cost,0)));
+  document.getElementById('pg-cost').innerHTML=`
+  <div style="margin-bottom:12px"><div style="font-size:18px;font-weight:800;color:#0F172A;letter-spacing:-.4px">Cost Intelligence</div><div style="font-size:11px;color:#94A3B8;margin-top:2px">10 years of healthcare spending</div></div>
+  <div class="cost-hero">
+    <div style="font-size:9px;color:rgba(255,255,255,.45);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Total Healthcare Spend 2015–2025</div>
+    <div class="cost-hero-val">${usd(totalCost)}</div>
+    <div class="cost-hero-lbl">Across 25 care events · Medicare + Plan</div>
+    <div class="chg-grid">
+      <div class="chg-card"><div class="chg-val" style="color:#6EE7B7">${usd(totalPlan)}</div><div class="chg-lbl">Plan Paid</div></div>
+      <div class="chg-card"><div class="chg-val" style="color:#FCD34D">${usd(totalCopay)}</div><div class="chg-lbl">Your Copay</div></div>
+      <div class="chg-card"><div class="chg-val" style="color:#FCA5A5">${usd(preventCost)}</div><div class="chg-lbl">Preventable</div></div>
+    </div>
+  </div>
+  <div class="cost-bar-section">
+    <div style="font-size:12px;font-weight:800;color:#0F172A;margin-bottom:11px">Cost by Category</div>
+    ${Object.entries(TYPE).map(([k,m])=>{const cat=EVENTS.filter(e=>e.type===k).reduce((a,b)=>a+b.cost,0);const pct=Math.round((cat/totalCost)*100);return`<div class="cost-bar-row"><div class="cost-bar-label"><span class="cbl-txt">${m.icon} ${m.label}</span><span class="cbl-amt">${usd(cat)}</span></div><div class="cbar-bg"><div class="cbar-fill" style="width:${pct}%;background:${m.color}"></div></div></div>`;}).join("")}
+  </div>
+  <div class="cost-bar-section">
+    <div style="font-size:12px;font-weight:800;color:#0F172A;margin-bottom:11px">Year-over-Year Spend</div>
+    ${yrs.map(y=>{const yc=EVENTS.filter(e=>e.year===y).reduce((a,b)=>a+b.cost,0);const pct=Math.round((yc/yrMax)*100);return`<div class="cost-bar-row"><div class="cost-bar-label"><span class="cbl-txt">${y}</span><span class="cbl-amt">${usd(yc)}</span></div><div class="cbar-bg"><div class="cbar-fill" style="width:${pct}%;background:#2563EB"></div></div></div>`;}).join("")}
+  </div>`;
+}
+
+renderTimeline();
+</script>
+</body>
+</html>
